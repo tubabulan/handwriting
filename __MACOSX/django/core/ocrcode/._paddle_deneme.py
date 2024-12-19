@@ -8,14 +8,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import logging
 from paddleocr import PaddleOCR, draw_ocr
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 from tkinter import Tk, filedialog
 
 # Klasörleri oluşturmak için kullanılan BASE_DIR
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.makedirs(os.path.join(BASE_DIR, "original_images"), exist_ok=True)
-os.makedirs(os.path.join(BASE_DIR, "digital_text_images"), exist_ok=True)
-os.makedirs(os.path.join(BASE_DIR, "excell_files"), exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, "excell_files"), exist_ok=True)  # "digital_text_images" kaldırıldı
 
 # Log ayarları
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -96,24 +95,9 @@ def ocr(file_path):
 
     ordered_texts = sort_texts_by_line(boxes, texts)
 
-    # Dijital metin görseli oluştur
-    digital_text_image_path = get_next_filename(os.path.join(BASE_DIR, "digital_text_images"), ".png")
-    digital_image = Image.new('RGB', (1000, 1000), color=(255, 255, 255))
-    draw = ImageDraw.Draw(digital_image)
-    font_path = "C:/Windows/Fonts/arial.ttf"
-    try:
-        font = ImageFont.truetype(font_path, 24)
-    except IOError:
-        font = ImageFont.load_default()
+    # **Dijital metin görseli kaldırıldı**
 
-    y_offset = 10
-    for text in ordered_texts:
-        draw.text((10, y_offset), text, font=font, fill=(0, 0, 0))
-        y_offset += 30
-
-    digital_image.save(digital_text_image_path)
-    logging.info(f"Dijital metin görseli '{digital_text_image_path}' dosyasına kaydedildi.")
-
+    # Excel dosyasına metin ve konumları kaydetme
     data = {
         "Text": ordered_texts,
         "Box": [boxes[i] for i in range(len(boxes))],
